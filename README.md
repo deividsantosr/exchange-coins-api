@@ -53,7 +53,7 @@ The following endpoints are available in the API:
 ```json
 {
   "value": 0,
-  "maximizeCouins": true
+  "maximizeCoins": true
 }
 ```
 
@@ -84,7 +84,7 @@ Coins amount: $11.0
 ```json
 {
   "value": 0,
-  "maximizeCouins": true
+  "maximizeCoins": true
 }
 ```
 
