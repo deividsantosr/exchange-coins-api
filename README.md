@@ -92,17 +92,26 @@ Coins amount: $11.0
 ```json
 {
   "success": true,
-  "message": "Exchanged $0 successfully!",
-  "summary": "",
-  "usedCoins": [],
-  "currentCoins": [
+  "message": "Exchanged $30 successfully!",
+  "summary": "- 100 coins (25 cents) = $25.0\n- 50 coins (10 cents) = $5.0\n",
+  "usedCoins": [
     {
       "currencyValue": 25,
       "quantity": 100
     },
     {
       "currencyValue": 10,
-      "quantity": 100
+      "quantity": 50
+    }
+  ],
+  "currentCoins": [
+    {
+      "currencyValue": 25,
+      "quantity": 0
+    },
+    {
+      "currencyValue": 10,
+      "quantity": 50
     },
     {
       "currencyValue": 5,
@@ -113,11 +122,13 @@ Coins amount: $11.0
       "quantity": 100
     }
   ],
-  "currentNotes": [],
-  "totalCoins": 41.0,
-  "totalNotes": 0,
+  "currentNotes": [
+    30
+  ],
+  "totalCoins": 11.0,
+  "totalNotes": 30,
   "total": 41.0,
-  "state": "Bills amount: $0\nCoins amount: $41.0\n- 100 coins (25 cents) = $25.0)\n- 100 coins (10 cents) = $10.0)\n- 100 coins (5 cents) = $5.0)\n- 100 coins (1 cent) = $1.0)\nTotal amount: $41.0"
+  "state": "Bills amount: $30\nCoins amount: $11.0\n- 50 coins (10 cents) = $5.0)\n- 100 coins (5 cents) = $5.0)\n- 100 coins (1 cent) = $1.0)\nTotal amount: $41.0"
 }
 ```
 
