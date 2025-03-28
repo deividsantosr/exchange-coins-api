@@ -1,4 +1,4 @@
-package com.exchange.api.utils.builder;
+package com.exchange.api.utils;
 
 import com.exchange.api.model.Coin;
 

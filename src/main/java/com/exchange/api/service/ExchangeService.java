@@ -4,7 +4,7 @@ import com.exchange.api.model.Coin;
 import com.exchange.api.model.ExchangeRequest;
 import com.exchange.api.model.ExchangeResponse;
 import com.exchange.api.service.builder.ExchangeResponseBuilder;
-import com.exchange.api.utils.builder.ExchangeUtils;
+import com.exchange.api.utils.ExchangeUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.exchange.api.utils.builder.ExchangeUtils.INITIAL_COIN_QUANTITY;
+import static com.exchange.api.utils.ExchangeUtils.INITIAL_COIN_QUANTITY;
 
 @Service
 public class ExchangeService implements IExchangeService {

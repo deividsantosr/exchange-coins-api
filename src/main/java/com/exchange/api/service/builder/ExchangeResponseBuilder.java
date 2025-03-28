@@ -2,7 +2,7 @@ package com.exchange.api.service.builder;
 
 import com.exchange.api.model.Coin;
 import com.exchange.api.model.ExchangeResponse;
-import com.exchange.api.utils.builder.ExchangeUtils;
+import com.exchange.api.utils.ExchangeUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class ExchangeResponseBuilder {
         }
 
         String coinsUsedSummary = buildCoinsUsedSummary(coinsUsed).toString();
-        String machineStateSummary = buildMachineStateSummary(coins).toString();
+        String machineStateSummary = buildMachineState(coins).toString();
         BigDecimal totalNotes = ExchangeUtils.getTotalNotes(notes);
         BigDecimal totalCoins = ExchangeUtils.getTotalCoins(coins);
         BigDecimal total = ExchangeUtils.getTotal(totalCoins, totalNotes);
@@ -75,7 +75,7 @@ public class ExchangeResponseBuilder {
         return summary;
     }
 
-    public static StringBuilder buildMachineStateSummary(List<Coin> coins) {
+    public static StringBuilder buildMachineState(List<Coin> coins) {
         StringBuilder summary = new StringBuilder();
         BigDecimal totalAmount = BigDecimal.ZERO;
         for (Coin coin : coins) {
@@ -94,6 +94,5 @@ public class ExchangeResponseBuilder {
 
         return summary;
     }
-
 
 }
