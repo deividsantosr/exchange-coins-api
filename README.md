@@ -21,7 +21,7 @@ This is a simple API for exchanging bills to coins, built using Spring Boot. The
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/exchange-coin-api.git
+git clone https://github.com/deividsantosr/exchange-coins-api.git
 cd exchange-coin-api
 ```
 
