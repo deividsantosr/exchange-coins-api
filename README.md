@@ -22,7 +22,7 @@ This is a simple API for exchanging bills to coins, built using Spring Boot. The
 
 ```bash
 git clone https://github.com/deividsantosr/exchange-coins-api.git
-cd exchange-coin-api
+cd exchange-coins-api
 ```
 
 ### 2. Build the project
