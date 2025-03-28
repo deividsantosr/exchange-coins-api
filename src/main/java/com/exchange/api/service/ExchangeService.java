@@ -3,7 +3,8 @@ package com.exchange.api.service;
 import com.exchange.api.model.Coin;
 import com.exchange.api.model.ExchangeRequest;
 import com.exchange.api.model.ExchangeResponse;
-import com.exchange.api.utils.ExchangeUtils;
+import com.exchange.api.service.builder.ExchangeResponseBuilder;
+import com.exchange.api.utils.builder.ExchangeUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.exchange.api.utils.ExchangeUtils.INITIAL_COIN_QUANTITY;
+import static com.exchange.api.utils.builder.ExchangeUtils.INITIAL_COIN_QUANTITY;
 
 @Service
 public class ExchangeService implements IExchangeService {
@@ -26,18 +27,21 @@ public class ExchangeService implements IExchangeService {
     public String exchangeInfo(ExchangeRequest request) {
         ExchangeResponse exchangeResponse = exchange(request);
 
-        return ExchangeUtils.formatExchangeResponse(exchangeResponse);
+        return ExchangeResponseBuilder.buildExchangeInfo(exchangeResponse);
     }
 
     public ExchangeResponse exchange(ExchangeRequest request) {
         if (!machineRunning) {
-            return buildErrorResponse("The machine is out of order. There are not enough coins available.");
+            return ExchangeResponseBuilder.buildError("The machine is out of order. There are not enough coins available.", coins, notes);
         }
 
         BigDecimal amount = request.getValue();
-        int amountInCents = amount.multiply(BigDecimal.valueOf(100)).intValue();
         List<Coin> coinsUsed = new ArrayList<>();
-        int remainingAmount = amountInCents;
+        int remainingAmount = amount.multiply(BigDecimal.valueOf(100)).intValue();
+
+        if (isEnoughCurrencyAvailable(amount)) {
+            return ExchangeResponseBuilder.buildError("There are not enough coins to complete the transaction.", coins, notes);
+        }
 
         sortCoins(request.isMaximizeCoins());
 
@@ -50,13 +54,9 @@ public class ExchangeService implements IExchangeService {
             }
         }
 
-        if (remainingAmount > 0) {
-            return buildErrorResponse("There are not enough coins to complete the transaction.");
-        }
-
         checkMachineStatus();
 
-        return buildSuccessResponse(amount, coinsUsed);
+        return ExchangeResponseBuilder.buildSuccess(amount, coinsUsed, coins, notes);
     }
 
     public String updateCoins(int value, int quantity) {
@@ -96,76 +96,9 @@ public class ExchangeService implements IExchangeService {
                 : Comparator.comparingInt(Coin::getCurrencyValue).reversed());
     }
 
-    private ExchangeResponse buildErrorResponse(String message) {
-        return ExchangeResponse.builder()
-                .success(false)
-                .message(message)
-                .usedCoins(new ArrayList<>())
-                .currentCoins(coins)
-                .currentNotes(notes)
-                .totalCoins(BigDecimal.ZERO)
-                .build();
-    }
-
-    private ExchangeResponse buildSuccessResponse(BigDecimal amount, List<Coin> coinsUsed) {
-        if (amount.compareTo(BigDecimal.ZERO) > 0) {
-            notes.add(amount);
-        }
-
-        String coinsUsedSummary = buildCoinsUsedSummary(coinsUsed);
-        String machineStateSummary = buildMachineStateSummary();
-        BigDecimal notesTotal = notes.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal coinTotal = coins.stream()
-                .map(coin -> BigDecimal.valueOf(coin.getQuantity() * coin.getCurrencyValue() / 100.0))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal total = coinTotal.add(notesTotal);
-
-        return ExchangeResponse.builder()
-                .success(true)
-                .message("Exchanged $" + amount + " successfully!")
-                .summary(coinsUsedSummary)
-                .usedCoins(coinsUsed)
-                .currentCoins(coins)
-                .currentNotes(notes)
-                .totalCoins(coinTotal)
-                .totalNotes(notesTotal)
-                .total(total)
-                .state("Bills amount: $" + notesTotal + "\nCoins amount: $" + coinTotal + "\n" + machineStateSummary + "Total amount: $" + total)
-                .build();
-    }
-
-    private String buildCoinsUsedSummary(List<Coin> coinsUsed) {
-        StringBuilder summary = new StringBuilder();
-        for (Coin coin : coinsUsed) {
-            summary.append("- ")
-                    .append(coin.getQuantity())
-                    .append(" coins (")
-                    .append(coin.getCurrencyValue())
-                    .append(coin.getCurrencyValue() == 1 ? " cent) = $" : " cents) = $")
-                    .append(coin.getQuantity() * coin.getCurrencyValue() / 100.0)
-                    .append("\n");
-        }
-
-        return summary.toString();
-    }
-
-    private String buildMachineStateSummary() {
-        StringBuilder summary = new StringBuilder();
-        BigDecimal totalAmount = BigDecimal.ZERO;
-        for (Coin coin : coins) {
-            if (coin.getQuantity() > 0) {
-                summary.append("- ")
-                        .append(coin.getQuantity())
-                        .append(" coins (")
-                        .append(coin.getCurrencyValue())
-                        .append(coin.getCurrencyValue() == 1 ? " cent) = $" : " cents) = $")
-                        .append(coin.getQuantity() * coin.getCurrencyValue() / 100.0)
-                        .append(")\n");
-            }
-
-            totalAmount = totalAmount.add(BigDecimal.valueOf(coin.getQuantity() * coin.getCurrencyValue() / 100.0));
-        }
-
-        return summary.toString();
+    private boolean isEnoughCurrencyAvailable(BigDecimal amount) {
+        return amount.compareTo(ExchangeUtils.getTotalCoins(coins)) > 0;
     }
 }
+
+
