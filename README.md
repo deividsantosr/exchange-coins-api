@@ -43,13 +43,13 @@ The application will start and be accessible at `http://localhost:8080`.
 
 The following endpoints are available in the API:
 
-## `/api/exchange/exchange-info`
+# `/api/exchange/exchange-info`
 - **Method**: `POST`
 - **Description**: Retrieve exchange information.
 - **Request Body**: `ExchangeRequest`
 - **Response**: Exchange information as a string.
 
-####Request Body:
+**Request Body:**
 ```json
 {
   "value": 0,
@@ -57,7 +57,7 @@ The following endpoints are available in the API:
 }
 ```
 
-####Response Body:
+**Response Body:**
 
 ```text
 Exchanged $30 successfully!
@@ -74,13 +74,13 @@ Coins amount: $11.0
   Total amount: $41.0
 ```
 
-## `/api/exchange/exchange`
+# `/api/exchange/exchange`
 - **Method**: `POST`
 - **Description**: Perform a coin exchange.
 - **Request Body**: `ExchangeRequest`
 - **Response**: Exchange response as a `ExchangeResponse` object.
 
-####Request Body:
+**Request Body:**
 ```json
 {
   "value": 0,
@@ -88,7 +88,7 @@ Coins amount: $11.0
 }
 ```
 
-####Response Body:
+**Response Body:**
 ```json
 {
   "success": true,
@@ -121,18 +121,18 @@ Coins amount: $11.0
 }
 ```
 
-## `/api/exchange/reset`
+# `/api/exchange/reset`
 - **Method**: `PATCH`
 - **Description**: Reset the exchange machine.
 - **Response**: Success message.
 
-####Response Body:
+**Response Body:**
 
 ```text
 Machine reset successfully!
 ```
 
-## `/api/exchange/update-coins`
+# `/api/exchange/update-coins`
 - **Method**: `PATCH`
 - **Description**: Update the quantity of a specific coin.
 - **Request Parameters**:
@@ -140,12 +140,12 @@ Machine reset successfully!
     - `quantity`: The quantity of coins to update.
 - **Response**: Success message.
 
-####Request Body:
+**Request Body:**
 ```text
 ?currencyValue=25&quantity=100
 ```
 
-####Response Body:
+**Response Body:**
 
 ```text
 Coin updated successfully!
